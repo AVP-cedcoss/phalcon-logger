@@ -33,9 +33,29 @@ $loader->registerDirs(
     ]
 );
 
+$loader->registerNamespaces(
+    [
+        "component" => APP_PATH ."/component"
+    ]
+);
+
 $loader->register();
 
+// echo "<pre>";
+// print_r($loader);
+// die();
+
 $container = new FactoryDefault();
+
+$container->set(
+    'namespace',
+    function () {
+        $detail = array(
+            'component' => new \component\myescaper()
+        );
+        return (object)$detail;
+    }
+);
 
 $container->set(
     'view',

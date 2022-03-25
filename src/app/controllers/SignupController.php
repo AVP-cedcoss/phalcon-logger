@@ -16,9 +16,9 @@ class SignupController extends Controller{
         $escaper = new Escaper();
         
         $inputdata = array(
-            'user_name' => $escaper->escapeHtml($this->request->getPost('user_name')),
-            'user_email' => $escaper->escapeHtml($this->request->getPost('user_email')),
-            'user_password' => $escaper->escapeHtml($this->request->getPost('user_password'))
+            'user_name' => $this -> namespace -> component -> sanitize($this->request->getPost('user_name')),
+            'user_email' => $this -> namespace -> component -> sanitize($this->request->getPost('user_email')),
+            'user_password' => $this -> namespace -> component -> sanitize($this->request->getPost('user_password'))
         );
 
         $user->assign(

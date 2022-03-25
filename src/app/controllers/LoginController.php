@@ -28,6 +28,8 @@ class LoginController extends Controller
 
     private function fetchUserDetail($user_email, $user_password)
     {
+        $user_email = $this -> namespace -> component -> sanitize($user_email);
+        $user_password = $this -> namespace -> component -> sanitize($user_password);
         //SEARCH IN DB WHETHER USER EXISTS
         $user = Users::find (
             [
@@ -43,7 +45,8 @@ class LoginController extends Controller
         if (!count($user)) {
             // $this -> error("Invalid Details", 0);
             $this -> response -> redirect('login');
-            $this -> response -> send();        }
+            $this -> response -> send();
+        }
 
         //IF USER FOUND CREATE AN OBJECT AND PUSH TO SESSION
         $user = $user[0];
