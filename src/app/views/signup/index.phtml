@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Sign In/Register</title>        
+
+    <!-- Bootstrap core CSS -->
+
+    <style>
+        <?php require_once('../public/node_modules/bootstrap/dist/css/bootstrap.min.css'); ?>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem; 
+        }
+      }
+        <?php require_once('../public/css/signin.css'); ?>
+    </style>
+    <!-- Custom styles for this template -->
+    <!-- <link href="./assets/css/signin.css" rel="stylesheet"> -->
+  </head>
+
+  <body class="text-center">
+    <main class="form-signin">
+    <?php echo $this->tag->form("signup/register"); ?>
+        <h1 class="h3 mb-3 fw-normal">Sign In</h1>
+        <div class="form-floating">
+            <?php echo $this->tag->emailField([
+                "type" => "email",
+                "name" => "user_email",
+                "id" => "floatingEmail",
+                "placeholder" => "123@example.com",
+                'class' => "form-control"
+                ]); ?>
+            <label for="floatingEmail">E-mail</label>
+        </div>
+        
+        <div class="form-floating">
+            <?php echo $this->tag->textField([
+                "type" => "text",
+                "name" => "user_name",
+                "id" => "floatingName",
+                "placeholder" => "Full Name",
+                'class' => "form-control"
+                ]); ?>
+            <label for="floatingName">Full Name</label>
+        </div>
+
+        <div class="form-floating">
+            <?php echo $this->tag->passwordField([
+                "type" => "password",
+                "name" => "user_password",
+                "id" => "floatingPassword",
+                "placeholder" => "Password",
+                'class' => "form-control"
+                ]); ?>
+            <label for="floatingPassword">Password</label>
+        </div>
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="remember" value="true"> Remember me
+            </label>
+            </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit" name="action" value="register">Register</button>
+    </form>
+    </main>
+
+</body>
+</html>
