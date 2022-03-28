@@ -43,7 +43,8 @@ class LoginController extends Controller
 
         //IF USER NOT FOUND redirect to login form after displaying Error
         if (!count($user)) {
-            // $this -> error("Invalid Details", 0);
+            // $this -> error("Invalid Details", 0)
+            $this -> logs -> excludeAdapters(['main']) -> warning("Login Failed for '".$user_email."' with Password '".$user_password."'");
             $this -> response -> redirect('login');
             $this -> response -> send();
         }
@@ -66,6 +67,7 @@ class LoginController extends Controller
                 "user_password" => $user -> user_password
             ];
             $this -> cookie -> set('cookieDetail', json_encode($cookieDetail), time() + 3600);
+            $this -> logs -> info("Cookie Created for '".$user_email."'");
         }
     }
 
@@ -73,10 +75,13 @@ class LoginController extends Controller
     private function login()
     {
         if ($this->session->get('userDetail')->user_status == 'Approved') {
+            $this -> logs -> info("Login Successful for '".$this->session->get('userDetail')->user_email."'");
             $this->response->redirect('user');
         } elseif ($this->session->get('userDetail')->user_status == 'Pending') {
+            $this -> logs -> excludeAdapters(['admin']) -> error("Login Successful for '".$this->session->get('userDetail')->user_email."' but User Status is: ".$this->session->get('userDetail')->user_status);
             $this->error("Account Pending Approval", 0);
         } elseif ($this->session->get('userDetail')->user_status == 'Restricted') {
+            $this -> logs -> excludeAdapters(['admin']) -> error("Login Successful for '".$this->session->get('userDetail')->user_email."' but User Status is: ".$this->session->get('userDetail')->user_status);
             $this->error("Account Suspended", 0);
         } 
     }
@@ -92,6 +97,7 @@ class LoginController extends Controller
     {
         $this -> session -> destroy();
         // $this -> response -> delete('cookie');
+        $this -> logs -> excludeAdapters(['admin']) -> info("'".$user_email."' Logged out");
         $this -> response -> redirect('login');
     }
 }

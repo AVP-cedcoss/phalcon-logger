@@ -37,6 +37,7 @@ class SignupController extends Controller{
         if($success) {
             $this->view->message = "Register succesfully";
             $data = $this->request->getpost();
+            $this -> logs -> info("User Registered: '".$data['user_email']."'");
             $user = Users::find (
                 [
                     'conditions' => 'user_email = :email: and user_password = :password:' ,
@@ -62,8 +63,10 @@ class SignupController extends Controller{
                     "user_password" => $user -> user_password
                 ];
                 $this -> cookie -> set('cookieDetail', json_encode($cookieDetail), time() + 3600);
+                $this -> logs -> info("Cookie Created for '".$user_email."'");
             }
         } else {
+            $this -> logs -> critical("User: '".$user_email."' Not Register succesfully due to following reason: <br>".implode("<br>", $user->getMessages()));
             $this->view->message = "Not Register succesfully due to following reason: <br>".implode("<br>", $user->getMessages());
         }
         $this -> response -> redirect("login");

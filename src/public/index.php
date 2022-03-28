@@ -10,11 +10,12 @@ use Phalcon\Mvc\View;
 use Phalcon\Mvc\Application;
 use Phalcon\Url;
 use Phalcon\Db\Adapter\Pdo\Mysql;
-use Phalcon\Config;
 use Phalcon\Config\ConfigFactory;
 use Phalcon\Session\Manager;
 use Phalcon\Session\Adapter\Stream;
 use Phalcon\Http\Response\Cookies;
+use Phalcon\Logger;
+use Phalcon\Logger\Adapter\Stream as logStream;
 
 // $config = new Config([]);
 
@@ -35,7 +36,7 @@ $loader->registerDirs(
 
 $loader->registerNamespaces(
     [
-        "component" => APP_PATH ."/component"
+        "component" => APP_PATH . "/component"
     ]
 );
 
@@ -46,6 +47,20 @@ $loader->register();
 // die();
 
 $container = new FactoryDefault();
+
+$container->set(
+    'logs',
+    function () {
+        $logger  = new Logger(
+            'messages',
+            [
+                "main" => new logStream(APP_PATH . "/logs/main.log"),
+                "admin" => new logStream(APP_PATH . "/logs/admin.log"),
+            ]
+        );
+        return $logger;
+    }
+);
 
 $container->set(
     'namespace',
@@ -71,7 +86,7 @@ $container->set(
     function () {
         $fileName = '../app/storage/config.php';
         $factory = new ConfigFactory();
-        return $factory -> newInstance("php", $fileName);
+        return $factory->newInstance("php", $fileName);
     }
 );
 
@@ -87,7 +102,7 @@ $container->set(
 $container->set(
     'db',
     function () {
-        $config =$this->get('config');
+        $config = $this->get('config');
         return new Mysql(
             [
                 'host'     => $config['db']['host'],
@@ -104,23 +119,23 @@ $application = new Application($container);
 $container->set(
     'session',
     function () {
-            $session = new Manager();
-            $files = new Stream(
-                [
-                    'savePath' => '/tmp',
-                ]
-            );
-            $session->setAdapter($files);
-            $session->start();
-            return $session;
-        }
+        $session = new Manager();
+        $files = new Stream(
+            [
+                'savePath' => '/tmp',
+            ]
+        );
+        $session->setAdapter($files);
+        $session->start();
+        return $session;
+    }
 );
 
 $container->set(
     'cookie',
     function () {
         $cookie  = new Cookies();
-        $cookie -> useEncryption(false);
+        $cookie->useEncryption(false);
         return $cookie;
     }
 );
@@ -144,13 +159,12 @@ try {
     $response->send();
 } catch (\Exception $e) {
     $response = new Response();
-    if (strpos($e -> getMessage(), " handler class cannot be loaded")) {
+    if (strpos($e->getMessage(), " handler class cannot be loaded")) {
         echo "Controller Not Found";
         // Getting a response instance
-        $response -> redirect('error');
+        $response->redirect('error');
         $response->send();
-    } elseif (strpos($e -> getMessage(), "was not found on handler")) {
+    } elseif (strpos($e->getMessage(), "was not found on handler")) {
         echo "Method Not Found";
     }
-
 }
