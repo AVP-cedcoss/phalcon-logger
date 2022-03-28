@@ -5,11 +5,21 @@ use Phalcon\Escaper;
 
 class SignupController extends Controller{
 
+    /**
+     * Default Index Action
+     *
+     * @return void
+     */ 
     public function IndexAction()
     {
 
     }
 
+    /**
+     * Registers Users
+     *
+     * @return void
+     */
     public function registerAction(){
         $user = new Users();
 
